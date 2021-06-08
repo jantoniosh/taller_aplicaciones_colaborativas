@@ -1,9 +1,15 @@
 let socket;
+let colorCirculo;
+let load;
+let size = 25;
 
 function setup() {
     createCanvas(500, 500);
     socket = io.connect("http://localhost:3000");
-    background("#00FF00");
+    background("#222222");
+    socket.on('color', nuevoColor);
+    socket.on('datos', mostrarDatos);
+    load = false;
 }
 
 function draw() {
@@ -11,13 +17,28 @@ function draw() {
 }
 
 function mouseDragged() {
-    let posicion = {
-        x: mouseX,
-        y: mouseY
+    if (load) {
+        let data = {
+            x: mouseX,
+            y: mouseY,
+            color: colorCirculo
+        }
+        noStroke();
+        fill(colorCirculo);
+        ellipse(mouseX, mouseY, size, size);
+        socket.emit('mouse', data);
     }
+}
+
+function nuevoColor(data) {
+    console.log('Cliente: ' + data);
+    colorCirculo = data;
+    load = true;
+}
+
+function mostrarDatos(data) {
+    console.log(data);
     noStroke();
-    fill("#FF0000");
-    ellipse(mouseX, mouseY, 50, 50);
-    console.log(mouseX, mouseY);
-    socket.emit('mouse', posicion);
+    fill(data.color);
+    ellipse(data.x, data.y, size, size);
 }
