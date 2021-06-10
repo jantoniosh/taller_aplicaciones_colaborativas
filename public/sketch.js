@@ -5,7 +5,7 @@ let size = 25;
 
 function setup() {
     createCanvas(500, 500);
-    socket = io.connect("http://localhost:3000");
+    socket = io.connect("https://taller-webscoket-ccd.herokuapp.com/");
     background("#222222");
     socket.on('color', nuevoColor);
     socket.on('datos', mostrarDatos);
